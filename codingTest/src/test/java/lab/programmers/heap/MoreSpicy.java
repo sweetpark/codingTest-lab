@@ -46,6 +46,8 @@ import java.util.PriorityQueue;
  *
  *
  */
+
+// FIXME) 객체지향적 풀이 진행 필요 ( 객체 지향 코드는 src/main/java에 적용 필요 )
 public class MoreSpicy {
 
 
