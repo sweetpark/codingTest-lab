@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class PrimeNumber {
+public class PrimeNumberTest {
 
     @Test
     @DisplayName("문자열 숫자 만들기")
