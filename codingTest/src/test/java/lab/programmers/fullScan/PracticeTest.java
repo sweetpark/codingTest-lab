@@ -92,12 +92,7 @@ public class PracticeTest {
 
         List<Integer> array = getResults(queue);
 
-        array.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        });
+        array.sort(Comparator.comparingInt(o -> o));
 
         Assertions.assertArrayEquals(new int[]{1,2,3}, array.stream().mapToInt(i -> i).toArray());
     }
@@ -113,13 +108,7 @@ public class PracticeTest {
     }
 
     private static PriorityQueue<Data> initQueue() {
-        PriorityQueue<Data> queue = new PriorityQueue<>(new Comparator<Data>() {
-            @Override
-            public int compare(Data o1, Data o2) {
-                return o2.success - o1.success;
-            }
-        });
-        return queue;
+        return new PriorityQueue<>((o1, o2) -> o2.success - o1.success);
     }
 
     private static List<Integer> getResults(PriorityQueue<Data> queue) {
