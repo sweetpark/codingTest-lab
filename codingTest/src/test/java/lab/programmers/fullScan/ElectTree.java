@@ -54,8 +54,6 @@ public class ElectTree {
             }
 
 
-            //FIXME) 나눠지는 구간 (지금은 처음만 나눴을경우) >> 현재는 0 번째에서 나눔
-            //FIXME) 구간별로 결과값(Math.min(currentResult, result);) 최소값 => DFS/BFS 사용해야할듯하다 ==> DFS/BFS로 구현 안해봄
             int calc = split(i, wires, n);
             result = Math.min(result, calc);
 
