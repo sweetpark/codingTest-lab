@@ -3,8 +3,7 @@ package lab.programmers.fullScan;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 // https://school.programmers.co.kr/learn/courses/30/lessons/86971#
 public class ElectTree {
@@ -15,12 +14,21 @@ public class ElectTree {
     @Test
     public void test(){
 
-        Assertions.assertEquals( 0, Solution( new int[][]{}, 1));
-        Assertions.assertEquals( 0, Solution( new int[][]{{1,2}}, 2));
-        Assertions.assertEquals( 1, Solution( new int[][]{{1,2}, {2,3}}, 3));
-        Assertions.assertEquals( 3, Solution( new int[][]{{1,3}, {2,3}, {3,4} , {4,5} , {4,6}, {4,7}, {7,8}, {7,9}}, 9));
-        Assertions.assertEquals( 0, Solution( new int[][]{{1,2},{2,3},{3,4}}, 4));
-        Assertions.assertEquals( 1, Solution( new int[][]{ {1,2},{2,7},{3,7},{3,4},{4,5},{6,7} }, 7));
+        // 반복문
+        Assertions.assertEquals( 0, WrapperSolution( new int[][]{}, 1, false));
+        Assertions.assertEquals( 0, WrapperSolution( new int[][]{{1,2}}, 2, false));
+        Assertions.assertEquals( 1, WrapperSolution( new int[][]{{1,2}, {2,3}}, 3, false));
+        Assertions.assertEquals( 3, WrapperSolution( new int[][]{{1,3}, {2,3}, {3,4} , {4,5} , {4,6}, {4,7}, {7,8}, {7,9}}, 9,false));
+        Assertions.assertEquals( 0, WrapperSolution( new int[][]{{1,2},{2,3},{3,4}}, 4,false));
+        Assertions.assertEquals( 1, WrapperSolution( new int[][]{ {1,2},{2,7},{3,7},{3,4},{4,5},{6,7} }, 7,false));
+
+        // DFS
+//        Assertions.assertEquals( 0, WrapperSolution( new int[][]{}, 1, true));
+//        Assertions.assertEquals( 0, WrapperSolution( new int[][]{{1,2}}, 2, true));
+//        Assertions.assertEquals( 1, WrapperSolution( new int[][]{{1,2}, {2,3}}, 3, true));
+//        Assertions.assertEquals( 3, WrapperSolution( new int[][]{{1,3}, {2,3}, {3,4} , {4,5} , {4,6}, {4,7}, {7,8}, {7,9}}, 9,true));
+//        Assertions.assertEquals( 0, WrapperSolution( new int[][]{{1,2},{2,3},{3,4}}, 4,true));
+        Assertions.assertEquals( 1, WrapperSolution( new int[][]{ {1,2},{2,7},{3,7},{3,4},{4,5},{6,7} }, 7,true));
 
 
     }
@@ -106,6 +114,77 @@ public class ElectTree {
         }
 
         return Math.abs(left.size() - right.size());
+    }
+
+
+
+    public Integer WrapperSolution(int[][] wires, int n, boolean dfs){
+        if(dfs){
+            return Solution2(wires,n);
+        }else{
+            return Solution(wires,n);
+        }
+    }
+
+    public Integer Solution2(int[][] wires, int n) {
+
+        List<Integer>[] graph = new ArrayList[n+1];
+
+        for(int i = 1; i < n +1; i++){
+            graph[i] = new ArrayList<>();
+        }
+
+        for(int[] wire : wires){
+            graph[wire[0]].add(wire[1]);
+            graph[wire[1]].add(wire[0]);
+        }
+
+
+        int result = Integer.MAX_VALUE;
+        for (int[] wire : wires) {
+
+            int removePart1 = wire[0];
+            int removePart2 = wire[1];
+
+            graph[removePart1].remove(Integer.valueOf(removePart2));
+            graph[removePart2].remove(Integer.valueOf(removePart1));
+
+            System.out.println("\n\n ============ [ graph ] =============");
+            System.out.println(Arrays.toString(graph));
+            System.out.println("================================\n\n");
+
+            boolean[] visited = new boolean[n+1];
+
+            System.out.println();
+            System.out.println("================ [DFS 탐색 Stage] " + wire[0] + " ===================");
+            int countA = dfs(wire[0], visited, graph);
+            System.out.println("=================== END ==========================");
+            System.out.println("\n\n\n\n");
+            int countB = n - countA;
+
+            result = Math.min(result,Math.abs(countA - countB));
+
+            //복구
+            graph[removePart1].add(removePart2);
+            graph[removePart2].add(removePart1);
+        }
+
+        return result;
+    }
+
+    private int dfs(int current, boolean[] visited, List<Integer>[] graph) {
+
+        int count = 1;
+        visited[current] = true;
+
+        for (int node : graph[current]) {
+            if(!visited[node]){
+                count+= dfs(node, visited, graph);
+                System.out.println("current Node : " + current + " , Visite Node : " + node + ", count : " + count);
+            }
+        }
+
+        return count;
     }
 
 }
