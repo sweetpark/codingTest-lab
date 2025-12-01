@@ -9,12 +9,9 @@ import org.junit.jupiter.api.Test;
 public class WordBook {
 
 
-    public static final char[] WORD_SET = new char[]{'A', 'I', 'O', 'E', 'U'};
+    private static final char[] WORD_SET = {'A', 'E', 'I', 'O', 'U'};
+    private static final int[] WEIGHT = {781, 156, 31, 6, 1};
 
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @Test
     public void test(){
@@ -30,108 +27,24 @@ public class WordBook {
 
     private int getCount(String word) {
 
-        int append = 0;
-        if(word.length() == 4){
-            char c = word.charAt(word.length() - 1);
-            switch (c){
-                case 'A':
-                    append = 5 * 0;
-                    break;
-                case 'E':
-                    append = 5 * 1;
-                    break;
-                case 'I':
-                    append = 5 * 2;
-                    break;
-                case 'O':
-                    append = 5 * 3;
-                    break;
-                case 'U':
-                    append = 5 * 4;
-                    break;
-            }
-        } else if (word.length() == 3) {
-            char c = word.charAt(word.length() - 1);
-            switch (c){
-                case 'A':
-                    append =5 * 5 * 0;
-                    break;
-                case 'E':
-                    append =5 * 5 * 1;
-                    break;
-                case 'I':
-                    append =5 * 5 * 2;
-                    break;
-                case 'O':
-                    append =5 * 5 * 3;
-                    break;
-                case 'U':
-                    append =5 * 5 * 4;
-                    break;
-            }
-        }else if(word.length() == 2) {
-            char c = word.charAt(word.length() - 1);
-            switch (c){
-                case 'A':
-                    append =5 * 5 * 5 * 0;
-                    break;
-                case 'E':
-                    append =5 * 5 * 5 * 1;
-                    break;
-                case 'I':
-                    append =5 * 5 * 5 * 2;
-                    break;
-                case 'O':
-                    append =5 * 5 * 5 * 3;
-                    break;
-                case 'U':
-                    append =5 * 5 * 5 * 4;
-                    break;
+        int answer = 0;
 
+        for (int i = 0; i < word.length(); i++) {
+            int idx = 0;
+
+            // 문자 위치 찾기
+            for (int j = 0; j < WORD_SET.length; j++) {
+                if (WORD_SET[j] == word.charAt(i)) {
+                    idx = j;
+                    break;
+                }
             }
 
-        }else if(word.length() == 1) {
-            char c = word.charAt(0);
-            switch (c) {
-                case 'A':
-                    append = 5 * 5 * 5 * 5 * 0;
-                    break;
-                case 'E':
-                    append = 5 * 5 * 5 * 5 * 1;
-                    break;
-                case 'I':
-                    append = 5 * 5 * 5 * 5 * 2;
-                    break;
-                case 'O':
-                    append = 5 * 5 * 5 * 5 * 3;
-                    break;
-                case 'U':
-                    append = 5 * 5 * 5 * 5 * 4;
-                    break;
-            }
+            // 현재 자리에서 더해지는 값 = idx * weight[i]
+            answer += idx * WEIGHT[i];
         }
 
-        int count  = 0;
-        for (int i = 0; i <word.length(); i++) {
-            char extractWord = word.charAt(i);
-
-            switch(extractWord){
-                case 'U':
-                    count += 1;
-                case 'O':
-                    count += 1;
-                case 'I':
-                    count += 1;
-                case 'E':
-                    count += 1;
-                case 'A':
-                    count += 1;
-                    break;
-                default:
-                    count = 0;
-                    break;
-            }
-        }
-        return count + append;
+        // 자신의 길이만큼 +1 (사전에서 한 글자씩 완성되므로)
+        return answer + word.length();
     }
 }
