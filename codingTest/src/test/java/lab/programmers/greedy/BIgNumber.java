@@ -2,9 +2,9 @@ package lab.programmers.greedy;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class BIgNumber {
 
@@ -15,56 +15,49 @@ public class BIgNumber {
 
     @Test
     public void test(){
-        Assertions.assertEquals(1, Solution("10", 1));
-    }
-
-    private int Solution(String number, int removeCount){
-
-        char[] array = new char[number.length()];
-        for(int i = 0; i < number.length(); i++){
-            array[i] = number.charAt(i);
-        }
-
-
-        List<Integer> result = new ArrayList<>();
-
-        //TODO) removeCount 제외한 여러 종류의 수
-        for(int i = 0; i < number.length(); i++){
-            result.add(removeNum(number, removeCount, array));
-        }
-
-
-        result.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        });
-
-        return result.get(0);
+        Assertions.assertEquals("1", Solution("10", 1));
+        Assertions.assertEquals("94", Solution("1924", 2));
+        Assertions.assertEquals("3234", Solution("1231234", 3));
+        Assertions.assertEquals("775841", Solution("4177252841", 4));
+        Assertions.assertEquals("7", Solution("1276", 3));
+        Assertions.assertEquals("7", Solution("12765", 4));
+        Assertions.assertEquals("7", Solution("12567", 4));
     }
 
 
-    private static Integer removeNum(String number, int removeCount, char[] array) {
-        char[] afterArray = new char[number.length() - removeCount];
-        int index = 0;
-        int temp = 0;
-        for (char c : array) {
-            // TODO) 숫자 개수 만큼 제거
-            if(temp < removeCount){
-                temp++;
-            }else{
-                afterArray[index] = c;
-                index++;
+    private String Solution(String number, int removeCount){
+
+//        Deque<String> stack = new LinkedList<>();
+        Deque<String> stack = new ArrayDeque<>();
+        for(int i = 0; i < number.length(); i++){
+            String compareChar = String.valueOf(number.charAt(i));
+
+            while(!stack.isEmpty()
+                    && removeCount >  0
+                    && Integer.parseInt(compareChar) > Integer.parseInt(stack.peekLast())
+            ){
+                stack.pollLast();
+                removeCount--;
             }
+
+            stack.addLast(compareChar);
+
         }
+
+
+        for(int i = 0; i < removeCount; i++){
+            stack.pollLast();
+        }
+
 
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < afterArray.length; i++)
-        {
-            sb.append(afterArray[i]);
+        while(!stack.isEmpty()){
+            sb.append(stack.pollFirst());
         }
 
-        return Integer.parseInt(sb.toString());
+
+
+        return sb.toString();
     }
+
 }
